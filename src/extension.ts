@@ -25,7 +25,9 @@ export function activate(context: vscode.ExtensionContext) {
       const properties: ExtensionProperties = getExtensionProperties(config);
       for (let index = 0; index < editor.selections.length; index++) {
         const selection: vscode.Selection = editor.selections[index];
-        const selectedVar: string = document.getText(selection);
+        const wordAtCursor: vscode.Range | undefined =
+          document.getWordRangeAtPosition(selection.end);
+        const selectedVar: string = document.getText(wordAtCursor);
         const lineOfSelectedVar: number = selection.active.line;
         // Check if the selection line is not the last one in the document and the selected variable is not empty
         if (selectedVar.trim().length !== 0) {
@@ -175,7 +177,7 @@ function getExtensionProperties(
   const insertEnclosingClass = workspaceConfig.insertEnclosingClass;
   const insertEnclosingFunction = workspaceConfig.insertEnclosingFunction;
   const quote = workspaceConfig.quote || '"';
-  const delimiterInsideMessage = workspaceConfig.delimiterInsideMessage || "~";
+  const delimiterInsideMessage = workspaceConfig.delimiterInsideMessage || "";
   const includeFileNameAndLineNum =
     workspaceConfig.includeFileNameAndLineNum || false;
   const extensionProperties: ExtensionProperties = {
